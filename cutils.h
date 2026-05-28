@@ -70,10 +70,16 @@
 #include <ctype.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #ifdef _WIN32
     #include <Windows.h>
 #else
 #endif
+
+#define Kilobytes(x) 1024 * (x)
+#define Megabytes(x) 1024 * Kilobytes(x)
+#define Gigabytes(x) 1024 * Megabytes(x)
+#define Terabytes(x) 1024 * Gigabytes(x)
 
 typedef struct
 {
