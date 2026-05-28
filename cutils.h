@@ -69,10 +69,10 @@
 #include <assert.h>
 #include <ctype.h>
 #include <stdint.h>
+#include <stdlib.h>
 #ifdef _WIN32
     #include <Windows.h>
 #else
-    #include <memory.h>
 #endif
 
 typedef struct
@@ -148,7 +148,6 @@ StringView cutils_sv_read_entire_file(Arena* arena, char* filepath);
 
 #endif // CUTILS_H
 
-#define CUTILS_IMPLEMENTATION // NOTE: for syntax highlighting
 #ifdef CUTILS_IMPLEMENTATION
 
 // Arena ----------------------------------------------------------------------
@@ -200,7 +199,7 @@ void* cutils_arena_pop(Arena* arena, size_t size)
 
 StringView cutils_sv_from_cstr(char* cstr)
 {
-    return (StringView){
+    return (StringView) {
         .data = cstr,
         .size = strlen(cstr),
     };
@@ -208,7 +207,7 @@ StringView cutils_sv_from_cstr(char* cstr)
 
 StringView cutils_sv_from_parts(char* str, size_t size)
 {
-    return (StringView){
+    return (StringView) {
         .data = str,
         .size = size,
     };
