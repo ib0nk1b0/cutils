@@ -98,23 +98,23 @@ void*  cutils_arena_pop(Arena* arena, size_t size);
 
 typedef struct
 {
-    char* data;
-    size_t size;
+    const char* data;
+    size_t      size;
 } StringView;
 
 #define SV_FMT "%.*s"
 #define SV_ARG(sv) (int)sv.size, sv.data
 
-StringView cutils_sv_from_cstr(char* cstr);
-StringView cutils_sv_from_parts(char* str, size_t size);
+StringView cutils_sv_from_cstr(const char* cstr);
+StringView cutils_sv_from_parts(const char* str, size_t size);
 StringView cutils_sv_trim(StringView sv);
 StringView cutils_sv_trim_left(StringView sv);
 StringView cutils_sv_trim_right(StringView sv);
 StringView cutils_sv_chop_by_delim(StringView* sv, char delim);
 StringView cutils_sv_chop_line(StringView* sv);
 
-char* cutils_read_entire_file(Arena* arena, char* filepath, size_t* outSize);
-StringView cutils_sv_read_entire_file(Arena* arena, char* filepath);
+char* cutils_read_entire_file(Arena* arena, const char* filepath, size_t* outSize);
+StringView cutils_sv_read_entire_file(Arena* arena, const char* filepath);
 
 #ifdef CUTILS_NO_PREFIX
 
@@ -203,7 +203,7 @@ void* cutils_arena_pop(Arena* arena, size_t size)
 
 // StringView -----------------------------------------------------------------
 
-StringView cutils_sv_from_cstr(char* cstr)
+StringView cutils_sv_from_cstr(const char* cstr)
 {
     return (StringView) {
         .data = cstr,
@@ -211,7 +211,7 @@ StringView cutils_sv_from_cstr(char* cstr)
     };
 }
 
-StringView cutils_sv_from_parts(char* str, size_t size)
+StringView cutils_sv_from_parts(const char* str, size_t size)
 {
     return (StringView) {
         .data = str,
@@ -307,7 +307,7 @@ StringView cutils_sv_chop_line(StringView* sv)
 
 // FILE I/O -----------------------------------------------------------------
 
-char* cutils_read_entire_file(Arena* arena, char* filepath, size_t* outSize)
+char* cutils_read_entire_file(Arena* arena, const char* filepath, size_t* outSize)
 {
     FILE* f = fopen(filepath, "rb");
     assert(f && "Could not open file!");
@@ -325,7 +325,7 @@ char* cutils_read_entire_file(Arena* arena, char* filepath, size_t* outSize)
     return result;
 }
 
-StringView cutils_sv_read_entire_file(Arena* arena, char* filepath)
+StringView cutils_sv_read_entire_file(Arena* arena, const char* filepath)
 {
     StringView result = {0};
 
