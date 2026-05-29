@@ -107,6 +107,7 @@ typedef struct
 
 StringView cutils_sv_from_cstr(const char* cstr);
 StringView cutils_sv_from_parts(const char* str, size_t size);
+char*      cutils_sv_make_cstr(Arena* arena, StringView sv);
 StringView cutils_sv_trim(StringView sv);
 StringView cutils_sv_trim_left(StringView sv);
 StringView cutils_sv_trim_right(StringView sv);
@@ -137,6 +138,7 @@ StringView cutils_sv_read_entire_file(Arena* arena, const char* filepath);
 
 #define sv_from_cstr cutils_sv_from_cstr
 #define sv_from_parts cutils_sv_from_parts
+#define sv_make_cstr cutils_sv_make_cstr
 #define sv_trim cutils_sv_trim
 #define sv_trim_left cutils_sv_trim_left
 #define sv_trim_right cutils_sv_trim_right
@@ -194,7 +196,7 @@ void* cutils_arena_push(Arena* arena, size_t size)
 
 void* cutils_arena_pop(Arena* arena, size_t size)
 {
-    assert(arena->pos - size >= 0);
+    assert(arena->pos > size);
     arena->pos -= size; 
     uint8_t* out = (uint8_t*)arena + sizeof(Arena) + arena->pos;
     memset(out, 0, size);
@@ -217,6 +219,23 @@ StringView cutils_sv_from_parts(const char* str, size_t size)
         .data = str,
         .size = size,
     };
+}
+
+char* cutils_sv_make_cstr(Arena* arena, StringView sv)
+{
+    char* result;
+    if (arena)
+    {
+        result = ArenaPushArray(arena, char, sv.size + 1);
+    }
+    else
+    {
+        result = malloc(sv.size + 1);
+    }
+
+    memcpy(result, sv.data, sv.size);
+
+    return result;
 }
 
 StringView cutils_sv_trim(StringView sv)
