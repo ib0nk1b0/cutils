@@ -117,11 +117,14 @@ StringView cutils_sv_chop_line(StringView* sv);
 char* cutils_read_entire_file(Arena* arena, const char* filepath, size_t* outSize);
 StringView cutils_sv_read_entire_file(Arena* arena, const char* filepath);
 
+char* cutils_next_cmd_line_arg(int* argc, char*** argv);
+
 #ifdef CUTILS_NO_PREFIX
 
 #define CUTILS_NO_PREFIX_ARENA
 #define CUTILS_NO_PREFIX_STRING_VIEW
 #define CUTILS_NO_PREFIX_FILE_IO
+#define CUTILS_NO_PREFIX_OTHER
 
 #endif // CUTILS_NO_PREFIX
 
@@ -153,6 +156,12 @@ StringView cutils_sv_read_entire_file(Arena* arena, const char* filepath);
 #define sv_read_entire_file cutils_sv_read_entire_file
 
 #endif // CUTILS_NO_PREFIX_FILE_IO
+
+#ifdef CUTILS_NO_PREFIX_OTHER
+
+#define next_cmd_line_arg cutils_next_cmd_line_arg
+
+#endif // CUTILS_NO_PREFIX_OTHER
 
 #endif // CUTILS_H
 
@@ -351,6 +360,17 @@ StringView cutils_sv_read_entire_file(Arena* arena, const char* filepath)
     result.data = cutils_read_entire_file(arena, filepath, &result.size);
 
     return result;
+}
+
+// Other ----------------------------------------------------------------------
+
+char* cutils_next_cmd_line_arg(int* argc, char*** argv)
+{
+    assert(argc > 0);
+    char* cmd = **argv;
+    *argc -= 1;
+    *argv += 1;
+    return cmd;
 }
 
 #endif // CUTILS_IMPLEMENTATION
