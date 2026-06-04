@@ -205,7 +205,7 @@ void* cutils_arena_push(Arena* arena, size_t size)
 
 void* cutils_arena_pop(Arena* arena, size_t size)
 {
-    assert(arena->pos > size);
+    assert(arena->pos >= size);
     arena->pos -= size; 
     uint8_t* out = (uint8_t*)arena + sizeof(Arena) + arena->pos;
     memset(out, 0, size);
@@ -338,7 +338,11 @@ StringView cutils_sv_chop_line(StringView* sv)
 char* cutils_read_entire_file(Arena* arena, const char* filepath, size_t* outSize)
 {
     FILE* f = fopen(filepath, "rb");
-    assert(f && "Could not open file!");
+    if (f == NULL)
+    {
+        return NULL;
+    }
+    // assert(f && "Could not open file!");
 
     fseek(f, 0, SEEK_END);
     size_t fileSize = ftell(f);
