@@ -5,7 +5,7 @@
  *
  * Must use define CUTILS_IMPLEMENTATION before including cutils.h
  *
- * All functions have been prefixed with cutils_ to avoid potention name
+ * All functions have been prefixed with cutils_ to avoid potential name
  * conflicts
  *
  * There are several macros available to opt-out of this prefix on function
